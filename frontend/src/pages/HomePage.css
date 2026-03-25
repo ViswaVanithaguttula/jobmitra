@@ -1,0 +1,146 @@
+.home-page {
+  padding: 3rem 1.5rem;
+}
+
+.dashboard-banner {
+  background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
+  color: var(--white);
+  padding: 3rem 2rem;
+  border-radius: var(--radius-xl);
+  margin-bottom: 3rem;
+  box-shadow: 0 10px 25px -5px rgba(30, 58, 138, 0.4);
+  position: relative;
+  overflow: hidden;
+}
+
+.dashboard-banner::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -10%;
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+  border-radius: 50%;
+}
+
+.banner-content {
+  position: relative;
+  z-index: 1;
+}
+
+.banner-title {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+  color: var(--white);
+}
+
+.banner-tagline {
+  font-size: 1.1rem;
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: 2rem;
+}
+
+.banner-actions {
+  display: flex;
+  gap: 1rem;
+}
+
+/* Quick Actions */
+.quick-actions-section {
+  margin-bottom: 4rem;
+}
+
+.text-left {
+  text-align: left;
+  margin-bottom: 1.5rem;
+}
+
+.quick-actions-grid {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.shortcut-card {
+  display: flex;
+  flex-direction: column;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  color: inherit;
+  border-top: 4px solid transparent;
+}
+
+.shortcut-card:hover {
+  transform: translateY(-5px);
+  border-top-color: var(--primary-orange);
+}
+
+.sc-icon-wrapper {
+  width: 56px;
+  height: 56px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+}
+
+.bg-blue-light { background-color: var(--light-blue); }
+.bg-orange-light { background-color: var(--light-orange); }
+
+.text-blue { color: var(--primary-blue); }
+.text-orange { color: var(--primary-orange); }
+
+.shortcut-card h3 {
+  font-size: 1.25rem;
+  margin-bottom: 0.5rem;
+  color: var(--text-dark);
+}
+
+.shortcut-card p {
+  color: var(--text-light);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+/* Updates Section */
+.updates-section {
+  margin-bottom: 2rem;
+}
+
+.updates-box {
+  padding: 2rem;
+  background-color: var(--white);
+}
+
+.updates-title {
+  font-size: 1.25rem;
+  margin-bottom: 1.5rem;
+  color: var(--text-dark);
+  border-bottom: 1px solid #E2E8F0;
+  padding-bottom: 0.75rem;
+}
+
+.updates-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.updates-list li {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  color: var(--text-dark);
+}
+
+.update-date {
+  background-color: var(--light-blue);
+  color: var(--primary-blue);
+  padding: 0.25rem 0.5rem;
+  border-radius: var(--radius-md);
+  font-size: 0.8rem;
+  font-weight: 600;
+  min-width: 70px;
+  text-align: center;
+}

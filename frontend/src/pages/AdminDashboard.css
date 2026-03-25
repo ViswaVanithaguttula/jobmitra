@@ -1,0 +1,37 @@
+.admin-dashboard {
+  min-height: calc(100vh - 80px);
+}
+
+.admin-header {
+  margin-bottom: 3rem;
+}
+
+.admin-table-container {
+  overflow-x: auto;
+  padding: 2rem;
+}
+
+.admin-table th {
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.admin-table td {
+  vertical-align: middle;
+}
+
+.admin-table tbody tr:hover {
+  background-color: var(--light-blue);
+  transition: background-color 0.2s;
+}
+
+.add-exam-form {
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}

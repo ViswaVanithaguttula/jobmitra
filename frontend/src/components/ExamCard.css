@@ -1,0 +1,93 @@
+.exam-card {
+  display: flex;
+  flex-direction: column;
+  border-top: 4px solid var(--primary-blue);
+  height: 100%;
+}
+
+.exam-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+.save-btn-icon {
+  background: transparent;
+  color: #CBD5E1;
+  transition: all 0.2s;
+  padding: 0.25rem;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.save-btn-icon:hover {
+  color: #F43F5E;
+  background: rgba(244, 63, 94, 0.1);
+}
+.save-btn-icon.saved {
+  color: #F43F5E;
+}
+
+.exam-title {
+  font-size: 1.25rem;
+  color: var(--text-dark);
+}
+
+.exam-badge {
+  background-color: var(--light-orange);
+  color: var(--primary-orange);
+  padding: 0.25rem 0.5rem;
+  border-radius: var(--radius-md);
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.exam-desc {
+  color: var(--text-light);
+  font-size: 0.9rem;
+  margin-bottom: 1.5rem;
+  flex: 1;
+}
+
+.exam-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid #E2E8F0;
+}
+
+.detail-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--text-dark);
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.detail-item svg {
+  color: var(--primary-blue);
+}
+
+.exam-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: auto;
+}
+
+.w-full {
+  width: 100%;
+}
+
+.btn-icon-right {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+}

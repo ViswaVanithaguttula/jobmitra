@@ -1,0 +1,19 @@
+/* Reusing auth-card and auth-container from RegisterPage.css */
+
+.forgot-password {
+  text-align: right;
+  margin-top: -0.5rem;
+  margin-bottom: 1.5rem;
+  font-size: 0.875rem;
+}
+
+.forgot-password a {
+  font-weight: 500;
+  color: var(--primary-blue);
+  transition: color 0.3s ease;
+}
+
+.forgot-password a:hover {
+  text-decoration: underline;
+  color: var(--secondary-blue);
+}
