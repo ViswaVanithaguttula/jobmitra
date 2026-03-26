@@ -4,7 +4,10 @@ import {
   authUser, 
   getUserProfile, 
   updateUserProfile,
-  toggleSaveExam
+  toggleSaveExam,
+  getBackupExamsForUser,
+  lockExamAndGeneratePlan,
+  updateStudyProgress
 } from '../controllers/userController.js';
 import { protect } from '../middleware/authMiddleware.js';
 
@@ -17,6 +20,9 @@ router.post('/login', authUser);
 // Protected User routes
 // We chain the `protect` middleware before the `getUserProfile` controller
 router.route('/profile').get(protect, getUserProfile).put(protect, updateUserProfile);
+router.route('/profile/backup-exams').get(protect, getBackupExamsForUser);
+router.post('/profile/lock-exam/:examId', protect, lockExamAndGeneratePlan);
+router.put('/profile/study-plan/:weekNumber', protect, updateStudyProgress);
 router.post('/exams/:id/save', protect, toggleSaveExam);
 
 // Temporarily expose an elevation tool for the Local Test user (remove before PROD)

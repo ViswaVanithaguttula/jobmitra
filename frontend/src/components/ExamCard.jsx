@@ -3,7 +3,7 @@ import { Clock, BookOpen, ExternalLink, Briefcase, Heart } from 'lucide-react';
 import Button from './Button';
 import './ExamCard.css';
 
-const ExamCard = ({ title, ageLimit, qualification, description, backupParams = null, onViewDetails, isSaved = false, onToggleSave = null, examId = null }) => {
+const ExamCard = ({ title, ageLimit, qualification, description, backupParams = null, onViewDetails, isSaved = false, onToggleSave = null, examId = null, onLockExam = null }) => {
   return (
     <div className="exam-card card">
       <div className="exam-card-header">
@@ -45,16 +45,23 @@ const ExamCard = ({ title, ageLimit, qualification, description, backupParams = 
         )}
       </div>
 
-      <div className="exam-actions">
+      <div className="exam-actions" style={{ display: 'flex', gap: '8px', flexDirection: 'column' }}>
         {backupParams ? (
           <>
             <Button variant="outline" size="sm" className="w-full" onClick={() => window.location.href='/strategy'}>Plan Strategy</Button>
             <Button variant="primary" size="sm" className="w-full" onClick={onViewDetails}>View Details</Button>
           </>
         ) : (
-          <Button variant="outline" className="w-full btn-icon-right" onClick={onViewDetails}>
-            View Details <ExternalLink size={16} />
-          </Button>
+          <>
+            <Button variant="outline" className="w-full btn-icon-right" onClick={onViewDetails}>
+              View Details <ExternalLink size={16} />
+            </Button>
+            {onLockExam && (
+              <Button variant="primary" className="w-full" onClick={() => onLockExam(examId)}>
+                Lock Exam
+              </Button>
+            )}
+          </>
         )}
       </div>
     </div>

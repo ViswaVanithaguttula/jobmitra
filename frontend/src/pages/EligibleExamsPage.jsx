@@ -43,6 +43,36 @@ const EligibleExamsPage = () => {
 
   const handleCloseModal = () => setSelectedExam(null);
 
+  const handleLockExam = async (examId) => {
+    try {
+      const userInfo = JSON.parse(localStorage.getItem('jobmitra_user'));
+      if (!userInfo || !userInfo.token) {
+        alert('Please login to lock an exam.');
+        return;
+      }
+      
+      const res = await fetch(`http://localhost:5000/api/users/profile/lock-exam/${examId}`, {
+        method: 'POST',
+        headers: { 
+          Authorization: `Bearer ${userInfo.token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+      
+      const data = await res.json();
+      if (res.ok) {
+        alert('Exam locked successfully! Head over to the Strategy Planner to see your schedule.');
+        // Optionally update local user profile
+        setUserProfile(prev => ({ ...prev, lockedExam: examId }));
+      } else {
+        alert(data.message || 'Failed to lock exam');
+      }
+    } catch (err) {
+      console.error(err);
+      alert('An error occurred while locking the exam.');
+    }
+  };
+
   const filters = ['All', ...new Set(exams.map(e => e.examType))];
 
   const isEligible = (exam, profile) => {
@@ -131,12 +161,14 @@ const EligibleExamsPage = () => {
             {filteredExams.length > 0 ? filteredExams.map(exam => (
               <ExamCard 
                 key={exam._id}
+                examId={exam._id}
                 title={exam.examName}
                 ageLimit={`${exam.minAge} - ${exam.maxAge} Years`}
                 qualification={exam.qualificationRequired.join(', ')}
                 description={exam.description}
                 examDate={exam.examDate}
                 onViewDetails={() => setSelectedExam(exam)}
+                onLockExam={userProfile?.lockedExam === exam._id ? null : handleLockExam}
               />
             )) : (
               <div className="col-span-3 text-center py-8 text-gray-500">
@@ -246,6 +278,9 @@ const EligibleExamsPage = () => {
                 )}
               </div>
               <div className="modal-footer">
+                {userProfile?.lockedExam !== selectedExam._id && (
+                  <Button variant="outline" onClick={() => handleLockExam(selectedExam._id)}>Lock This Exam</Button>
+                )}
                 <Button variant="primary" onClick={handleCloseModal}>Close Details</Button>
               </div>
             </div>

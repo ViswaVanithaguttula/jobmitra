@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { CheckSquare, List, Map } from 'lucide-react';
+import { CheckSquare, List, Map, Target, BookOpen } from 'lucide-react';
 import Button from '../components/Button';
 import './HomePage.css';
 
 const HomePage = () => {
   const [userName, setUserName] = useState("Aspirant");
+  const [userProfile, setUserProfile] = useState(null);
 
   useEffect(() => {
     const userStr = localStorage.getItem('jobmitra_user');
@@ -16,11 +17,47 @@ const HomePage = () => {
           // Extract first name
           setUserName(user.name.split(' ')[0]);
         }
+        
+        if (user && user.token) {
+          fetch('http://localhost:5000/api/users/profile', {
+            headers: { Authorization: `Bearer ${user.token}` }
+          })
+          .then(res => res.json())
+          .then(data => {
+            if (data && !data.message) {
+              setUserProfile(data);
+            }
+          })
+          .catch(e => console.error(e));
+        }
+
       } catch (e) {
         console.error(e);
       }
     }
   }, []);
+
+  let progressPercentage = 0;
+  let nextTopic = "General Preparation";
+  let lockedExamName = "Target Exam";
+  let hasLockedExam = false;
+
+  if (userProfile && userProfile.lockedExam) {
+     hasLockedExam = true;
+     lockedExamName = userProfile.lockedExam.examName || "Your Target Exam";
+     const plan = userProfile.studyPlan || [];
+     if (plan.length > 0) {
+       const completed = plan.filter(p => p.isCompleted).length;
+       progressPercentage = Math.round((completed / plan.length) * 100);
+       
+       const nextPending = plan.find(p => !p.isCompleted);
+       if (nextPending) {
+         nextTopic = nextPending.title || (nextPending.tasks && nextPending.tasks[0]) || "Review Notes";
+       } else {
+         nextTopic = "All tasks completed! Ready for exam.";
+       }
+     }
+  }
 
   return (
     <div className="home-page container">
@@ -39,6 +76,38 @@ const HomePage = () => {
           </div>
         </div>
       </section>
+
+      {/* Progress Tracker Area */}
+      {hasLockedExam && (
+        <section className="progress-tracker-section" style={{ marginTop: '2rem' }}>
+          <div className="card" style={{ padding: '1.5rem', background: 'var(--white)' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+              <div>
+                <h2 style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--primary-blue)', fontSize: '1.5rem', margin: 0 }}>
+                  <Target className="text-orange" size={24} /> Progress Tracker
+                </h2>
+                <p style={{ margin: '0.25rem 0 0', color: 'var(--text-color)' }}>Target Exam: <strong>{lockedExamName}</strong></p>
+              </div>
+              <div style={{ textAlign: 'right' }}>
+                <div style={{ fontSize: '1.8rem', fontWeight: 'bold', color: 'var(--primary-orange)', lineHeight: 1 }}>{progressPercentage}%</div>
+                <div style={{ fontSize: '0.85rem', color: 'var(--text-light)' }}>Completed</div>
+              </div>
+            </div>
+
+            <div style={{ width: '100%', height: '12px', background: 'var(--border)', borderRadius: '6px', overflow: 'hidden', marginBottom: '1.5rem' }}>
+              <div style={{ width: `${progressPercentage}%`, height: '100%', background: 'linear-gradient(90deg, var(--primary-orange) 0%, var(--secondary-orange) 100%)', transition: 'width 0.5s ease' }}></div>
+            </div>
+
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', background: 'var(--bg-color)', padding: '1rem', borderRadius: '8px', borderLeft: '4px solid var(--primary-blue)' }}>
+               <BookOpen size={24} className="text-blue" />
+               <div>
+                 <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--text-light)' }}>Up Next for Study:</p>
+                 <strong style={{ color: 'var(--text-dark)', fontSize: '1.1rem' }}>{nextTopic}</strong>
+               </div>
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* Quick Actions / Feature Shortcuts */}
       <section className="quick-actions-section">

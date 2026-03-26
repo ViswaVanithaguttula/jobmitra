@@ -43,7 +43,13 @@ const Navbar = () => {
     } catch(e) {}
   }
 
+  console.log('--- NAVBAR DEBUG ---');
+  console.log('Is the user logged in according to localStorage?', !!userStr);
+  console.log('What is the actual isAdmin value from localStorage?', isAdmin);
+  console.log('Are we on a public page?', isPublicPage, location.pathname);
+
   if (isAdmin && !isPublicPage) {
+    console.log('Pushing Admin link to appLinks array!');
     appLinks.push({ name: 'Admin', path: '/admin' });
   }
 

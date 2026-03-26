@@ -44,6 +44,16 @@ const userSchema = mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Exam'
     }],
+    lockedExam: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Exam'
+    },
+    studyPlan: [{
+      weekNumber: Number,
+      title: String,
+      tasks: [String],
+      isCompleted: { type: Boolean, default: false }
+    }],
     graduationYear: {
       type: Number
     },

@@ -1,36 +1,77 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Compass, AlertTriangle } from 'lucide-react';
 import ExamCard from '../components/ExamCard';
 import './BackupExamsPage.css';
 
 const BackupExamsPage = () => {
   const [selectedExam, setSelectedExam] = useState(null);
-  const backupExams = [
-    {
-      id: 1,
-      title: "State PSC (Provincial Civil Services)",
-      description: "Highly overlapping syllabus with UPSC. Same GS subjects but with an additional local state history paper.",
-      backupParams: { similarity: "High (85%)" }
-    },
-    {
-      id: 2,
-      title: "IBPS PO / SBI PO",
-      description: "Excellent backup for SSC CGL aspirants due to heavy overlap in Quantitative Aptitude and Reasoning.",
-      backupParams: { similarity: "High (70%)" }
-    },
-    {
-      id: 3,
-      title: "RBI Grade B",
-      description: "Great alternative for UPSC economy enthusiasts. Focuses deeply on Finance and Management.",
-      backupParams: { similarity: "Moderate (60%)" }
-    },
-    {
-      id: 4,
-      title: "FCI Manager",
-      description: "A secure Central Govt job with an exam pattern very similar to SSC/Banking combo.",
-      backupParams: { similarity: "High (80%)" }
-    }
-  ];
+  const [backupExams, setBackupExams] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    const fetchBackupExams = async () => {
+      try {
+        const userInfo = JSON.parse(localStorage.getItem('jobmitra_user'));
+        if (!userInfo || !userInfo.token) {
+          setError('Please log in to see your personalized backup exams.');
+          setLoading(false);
+          return;
+        }
+
+        const response = await fetch('/api/users/profile/backup-exams', {
+          headers: {
+            'Authorization': `Bearer ${userInfo.token}`
+          }
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.message || 'Failed to fetch backup exams');
+        }
+
+        const formattedExams = data.backupExams.map(exam => ({
+          id: exam._id,
+          title: exam.examName,
+          description: exam.description || `Highly recommended backup for ${exam.primaryExamName}`,
+          backupParams: { 
+            similarity: `${exam.similarityScore}%`,
+            reason: exam.matchReason,
+            primary: exam.primaryExamName
+          }
+        }));
+
+        setBackupExams(formattedExams);
+        setLoading(false);
+      } catch (err) {
+        console.error(err);
+        setError(err.message);
+        setLoading(false);
+      }
+    };
+
+    fetchBackupExams();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="container padding-y" style={{ textAlign: 'center', marginTop: '2rem' }}>
+        <h2>Loading your personalized backup exams...</h2>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="container padding-y">
+        <div className="warning-banner glass" style={{ color: 'red' }}>
+          <AlertTriangle size={24} />
+          <p><strong>Error:</strong> {error}</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="container padding-y">
@@ -68,9 +109,19 @@ const BackupExamsPage = () => {
           <div className="modal-content card" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '500px', width: '100%', padding: '2rem' }}>
             <h2 style={{ marginBottom: '1rem', color: 'var(--primary-blue)' }}>{selectedExam.title}</h2>
             <p style={{ marginBottom: '1.5rem', color: 'var(--text-color)', lineHeight: '1.6' }}>{selectedExam.description}</p>
+            
             <div style={{ backgroundColor: 'var(--bg-color)', padding: '1rem', borderRadius: '8px', marginBottom: '1.5rem', border: '1px solid var(--border)' }}>
-              <strong style={{ color: 'var(--text-dark)' }}>Syllabus Similarity:</strong> {selectedExam.backupParams.similarity}
+              <div style={{ marginBottom: '0.5rem' }}>
+                <strong style={{ color: 'var(--text-dark)' }}>Primary Target:</strong> {selectedExam.backupParams.primary || "N/A"}
+              </div>
+              <div style={{ marginBottom: '0.5rem' }}>
+                <strong style={{ color: 'var(--text-dark)' }}>Syllabus Similarity:</strong> {selectedExam.backupParams.similarity}
+              </div>
+              <div>
+                <strong style={{ color: 'var(--text-dark)' }}>Why this Backup?:</strong> {selectedExam.backupParams.reason || "High logic overlap."}
+              </div>
             </div>
+
             <button 
               style={{ padding: '0.9rem', width: '100%', backgroundColor: 'var(--primary-blue)', color: '#fff', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: 600, fontSize: '1rem', marginTop: '0.5rem' }} 
               onClick={() => setSelectedExam(null)}
