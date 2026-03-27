@@ -1,5 +1,5 @@
 import express from 'express';
-import { getExams, getExamById, getBackupExams, createExam, deleteExam } from '../controllers/examController.js';
+import { getExams, getExamById, getBackupExams, createExam, deleteExam, updateExam } from '../controllers/examController.js';
 import { protect, admin } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
@@ -12,6 +12,7 @@ router.route('/backup/:examId').get(getBackupExams);
 
 router.route('/:id')
   .get(getExamById)
-  .delete(protect, admin, deleteExam);
+  .delete(protect, admin, deleteExam)
+  .put(protect, admin, updateExam);
 
 export default router;

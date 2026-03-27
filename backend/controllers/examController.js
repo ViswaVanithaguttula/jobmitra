@@ -97,4 +97,36 @@ const deleteExam = asyncHandler(async (req, res) => {
   }
 });
 
-export { getExams, getExamById, getBackupExams, createExam, deleteExam };
+// @desc    Update an exam
+// @route   PUT /api/exams/:id
+// @access  Private/Admin
+const updateExam = asyncHandler(async (req, res) => {
+  const { 
+    examName, minAge, maxAge, qualificationRequired, description, 
+    state, examType, syllabus, estimatedPrepHours, roadmap, strategies 
+  } = req.body;
+
+  const exam = await Exam.findById(req.params.id);
+
+  if (exam) {
+    exam.examName = examName || exam.examName;
+    exam.minAge = minAge !== undefined ? minAge : exam.minAge;
+    exam.maxAge = maxAge !== undefined ? maxAge : exam.maxAge;
+    if (qualificationRequired) exam.qualificationRequired = qualificationRequired;
+    exam.description = description || exam.description;
+    exam.state = state || exam.state;
+    exam.examType = examType || exam.examType;
+    if (syllabus) exam.syllabus = syllabus;
+    exam.estimatedPrepHours = estimatedPrepHours !== undefined ? estimatedPrepHours : exam.estimatedPrepHours;
+    if (roadmap) exam.roadmap = roadmap;
+    if (strategies) exam.strategies = strategies;
+
+    const updatedExam = await exam.save();
+    res.json(updatedExam);
+  } else {
+    res.status(404);
+    throw new Error('Exam not found');
+  }
+});
+
+export { getExams, getExamById, getBackupExams, createExam, deleteExam, updateExam };

@@ -1,4 +1,4 @@
-import asyncHandler from 'express-async-handler';
+ import asyncHandler from 'express-async-handler';
 import User from '../models/User.js';
 import Exam from '../models/Exam.js';
 import BackupExam from '../models/BackupExam.js';
